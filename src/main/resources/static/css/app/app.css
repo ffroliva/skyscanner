@@ -12,6 +12,131 @@ body {
   margin: 0;
 }
 
+#destination div {
+  background-color: #00b2d6;
+}
+
+#destination h1 {
+  color: white;
+  font-size: 50px;
+  vertical-align: middle;
+}
+
+.icon-arrow-right {
+  font-size: 30px;
+
+}
+
+.travellers {
+  color: #FFF;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.text-white { color: #FFF; }
+
+.pull-right {
+  text-align: right !important;
+}
+
+.navbar-margin-bottom-0 {
+  margin-bottom: 0px;
+}
+
+.top5 { margin-top:10px; }
+.top10 { margin-top:10px; }
+
+.bottom5 { margin-bottom:5px; }
+.bottom10 { margin-bottom:10px; }
+
+right5 {margin-right:5px;}
+right10 {margin-right:10px;}
+
+.left5 {margin-left:5px;}
+.left10 {margin-left:10px;}
+
+.customLink, .customLink:hover{
+  color: #00b2d6;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 550;
+  vertical-align: middle;
+}
+
+.flights {
+  background-color: #f2f1f4; 
+  padding-top: 10px;
+}
+
+.box-shadow--2dp {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)
+}
+.box-shadow--3dp {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .14), 0 3px 3px -2px rgba(0, 0, 0, .2), 0 1px 8px 0 rgba(0, 0, 0, .12)
+}
+.box-shadow--4dp {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2)
+}
+
+.img-size-25{
+  width:25px;
+}
+
+.arrow-right-flights {
+  font-size: 16px;
+}
+div.fight-item div h4 {
+  vertical-align: top;    
+  display: table-cell;
+  padding-bottom:5px;
+}
+.fight-item {
+  background-color: white; 
+  padding: 10px 0px 10px;
+}
+
+.flight-back {
+  padding-top: 15px;
+}
+
+.fight-duration-time {
+  vertical-align: top;    
+  font-size: 14px;
+  color: gray;
+  padding-bottom:5px;
+}
+
+.fight-stops{
+  font-size: 14px;
+  color: #0bd97b;
+  font-weight: 600;
+}
+.price{
+  font-size: 30px;
+}
+
+.company {
+  color: gray;
+}
+
+.btn-round{
+  border-radius: 17px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #00cb6f;
+  border:0px;
+}
+
+.fa-pound-sign{
+  -webkit-text-stroke: 1px white;
+}
+
+
+/**
+* Not found page CSS
+*/
 #notfound {
   position: relative;
   height: 100vh;

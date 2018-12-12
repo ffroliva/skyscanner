@@ -4,6 +4,7 @@ package br.com.ffroliva.skyscanner.entity.pricing;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.ToString;
 
 import javax.validation.Valid;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.util.List;
     "Places",
     "Currencies"
 })
+@ToString
 public class Pricing implements Serializable
 {
 

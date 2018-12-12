@@ -5,7 +5,9 @@ import br.com.ffroliva.skyscanner.entity.pricing.Pricing;
 
 public interface PricingService {
 
-    Pricing fetchFights(CreateSession searchFlight);
+    String fetchFights(CreateSession searchFlight);
+
+    String fetchNextMondayFlights();
 
 
 }

@@ -9,5 +9,7 @@ public interface PricingService {
 
     String fetchNextMondayFlights();
 
+    String createSession(CreateSession createSession);
+
 
 }

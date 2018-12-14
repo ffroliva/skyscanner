@@ -1,19 +1,21 @@
 package br.com.ffroliva.skyscanner.service.impl;
 
 import br.com.ffroliva.skyscanner.entity.pricing.CreateSession;
-import br.com.ffroliva.skyscanner.entity.pricing.Pricing;
 import br.com.ffroliva.skyscanner.service.PricingService;
 import br.com.ffroliva.skyscanner.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.client.ClientResponse;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
+
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,60 +25,42 @@ import java.time.format.DateTimeFormatter;
 public class PricingServiceImpl implements PricingService {
 
 
-    Client client = ClientBuilder.newClient();
-    WebTarget webTarget
-            = client.target("http://partners.api.skyscanner.net/apiservices/pricing/v1.0");
-
     @Override
     public String fetchFights(CreateSession searchFlight) {
-       // String createdSession = createSession(searchFlight);
-        StringBuilder sb = new StringBuilder("/").append("b0849e37-4290-4a68-9d95-31e9ef22869b");    Client client = ClientBuilder.newClient();
+        String location = createSession(searchFlight);
+
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget
-                = client.target("http://partners.api.skyscanner.net/apiservices/pricing/v1.0")
-                .path(sb.toString())
-                .queryParam("apiKey",searchFlight.getApiKey());
-        Response response = webTarget.request(MediaType.APPLICATION_JSON_TYPE)
+                = client.target(location)
+                .queryParam("apiKey", searchFlight.getApiKey());
+        Response response = webTarget.request()
                 .get();
 
         response.bufferEntity();
         String entity = response.readEntity(String.class);
-        log.debug(String.format("Poll results: %s",entity));
+        log.debug(String.format("Poll results: %s", entity));
         return entity;
     }
 
-    private String createSession(CreateSession createSession) {
-        String createdSession = null;
-
-        String response = webTarget
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(getForm(createSession),
-                        MediaType.APPLICATION_FORM_URLENCODED_TYPE),
+    public String createSession(CreateSession createSession){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate
+                .exchange("http://partners.api.skyscanner.net/apiservices/pricing/v1.0",
+                        HttpMethod.POST,
+                        createSessionForm(buildCreateSession()),
                         String.class);
-        log.debug(response);
-        return createdSession;
+
+        log.debug(String.format("Create session response: %s",response.toString()));
+
+
+        return response.getHeaders().getLocation().toString();
     }
 
-    private Form getForm(CreateSession createSession) {
-        final Form form = new Form();
-        form.param("cabinClass", createSession.getCabinclass());
-        form.param("country", createSession.getCountry());
-        form.param("currency", createSession.getCurrency());
-        form.param("locale", createSession.getLocale());
-        form.param("locationSschema", createSession.getLocationSchema());
-        form.param("originPlace", createSession.getOriginplace());
-        form.param("destinationPlace", createSession.getDestinationplace());
-        form.param("outboundDate", createSession.getOutbounddate());
-        form.param("inboundDate", createSession.getInbounddate());
-        form.param("adults", createSession.getAdults().toString());
-        form.param("apiKey", createSession.getApiKey());
-        return form;
+    public String fetchNextMondayFlights() {
+        return this.fetchFights(buildCreateSession());
     }
 
-    public String fetchNextMondayFlights(){
-       return this.fetchFights(createSession());
-    }
-
-    public static CreateSession createSession(){
+    public static CreateSession buildCreateSession() {
         LocalDate nextMonday = DateUtil.getNextMonday();
         LocalDate nextDay = nextMonday.plusDays(1);
         return CreateSession.builder()
@@ -90,8 +74,27 @@ public class PricingServiceImpl implements PricingService {
                 .outbounddate(nextMonday.format(DateTimeFormatter.ISO_DATE))
                 .inbounddate(nextDay.format(DateTimeFormatter.ISO_DATE))
                 .adults(1)
-                .apiKey("")
+                .apiKey("ss630745725358065467897349852985")
                 .build();
+    }
+
+    public static HttpEntity<MultiValueMap<String, String>> createSessionForm(CreateSession createSession){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type","application/x-www-form-urlencoded");
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("cabinclass", createSession.getCabinclass());
+        map.add("country", createSession.getCountry());
+        map.add("currency", createSession.getCurrency());
+        map.add("locale", createSession.getLocale());
+        map.add("locationschema", createSession.getLocationSchema());
+        map.add("originPlace", createSession.getOriginplace());
+        map.add("destinationPlace", createSession.getDestinationplace());
+        map.add("outboundDate", createSession.getOutbounddate());
+        map.add("inboundDate", createSession.getInbounddate());
+        map.add("adults", createSession.getAdults().toString());
+        map.add("apiKey","ss630745725358065467897349852985");
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+        return entity;
     }
 
 }

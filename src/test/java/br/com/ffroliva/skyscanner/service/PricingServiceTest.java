@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jersey.JerseyAutoConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.DayOfWeek;
@@ -19,25 +20,27 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
 @RunWith(SpringRunner.class)
-@SpringBootApplication(scanBasePackageClasses= {
-        AppConfig.class})
+
 @Slf4j
 public class PricingServiceTest {
 
-    private CreateSession createSession;
 
-    @Autowired
     private PricingService pricingService;
 
     @Before
     public void before(){
-        LocalDate nextMonday = DateUtil.getNextMonday();
-        LocalDate nextDay = nextMonday.plusDays(1);
-        createSession = PricingServiceImpl.createSession();
+        pricingService = new PricingServiceImpl();
+        pricingService.createSession(PricingServiceImpl.buildCreateSession());
+
     }
 
     @Test
     public void fetchFlightPricingTest(){
-        pricingService.fetchFights(createSession);
+        pricingService.fetchFights(PricingServiceImpl.buildCreateSession());
+    }
+
+    @Test
+    public void createSession(){
+        pricingService.createSession(PricingServiceImpl.buildCreateSession());
     }
 }

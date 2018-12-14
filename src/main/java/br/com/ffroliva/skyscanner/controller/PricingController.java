@@ -13,8 +13,8 @@ public class PricingController {
     @Autowired
     PricingService pricingService;
 
-    @GetMapping(value = "/flights/string", produces = MediaType.APPLICATION_JSON)
-    public String fetchFlightsAsString(){
+    @GetMapping(value = "/fetchNextMondayFlights", produces = MediaType.APPLICATION_JSON)
+    public String fetchNextMondayFlights(){
         return pricingService.fetchNextMondayFlights();
     }
 

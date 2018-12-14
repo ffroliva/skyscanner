@@ -9,14 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-
-import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -29,17 +23,21 @@ public class PricingServiceImpl implements PricingService {
     public String fetchFights(CreateSession searchFlight) {
         String location = createSession(searchFlight);
 
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget
-                = client.target(location)
-                .queryParam("apiKey", searchFlight.getApiKey());
-        Response response = webTarget.request()
-                .get();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        response.bufferEntity();
-        String entity = response.readEntity(String.class);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(location)
+                .queryParam("apiKey", searchFlight.getApiKey());
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        HttpEntity<String> response = new RestTemplate().exchange(
+                builder.toUriString(),
+                HttpMethod.GET,
+                entity,
+                String.class);
         log.debug(String.format("Poll results: %s", entity));
-        return entity;
+        return response.getBody();
     }
 
     public String createSession(CreateSession createSession){

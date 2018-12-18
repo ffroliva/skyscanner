@@ -4,6 +4,8 @@ import br.com.ffroliva.skyscanner.entity.pricing.CreateSession;
 import br.com.ffroliva.skyscanner.service.PricingService;
 import br.com.ffroliva.skyscanner.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -11,12 +13,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.el.PropertyNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
 public class PricingServiceImpl implements PricingService {
+
+    public static final String API_KEY_PROPERTY = "api.key";
+
+    @Autowired
+    Environment env;
 
 
     @Override
@@ -27,7 +35,9 @@ public class PricingServiceImpl implements PricingService {
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(location)
-                .queryParam("apiKey", searchFlight.getApiKey());
+                .queryParam("apiKey", searchFlight.getApiKey())
+                .queryParam("pageIndex", 0)
+                .queryParam("pageSize",10);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -40,7 +50,7 @@ public class PricingServiceImpl implements PricingService {
         return response.getBody();
     }
 
-    public String createSession(CreateSession createSession){
+    public String createSession(CreateSession createSession) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate
                 .exchange("http://partners.api.skyscanner.net/apiservices/pricing/v1.0",
@@ -48,7 +58,7 @@ public class PricingServiceImpl implements PricingService {
                         createSessionForm(buildCreateSession()),
                         String.class);
 
-        log.debug(String.format("Create session response: %s",response.toString()));
+        log.debug(String.format("Create session response: %s", response.toString()));
 
 
         return response.getHeaders().getLocation().toString();
@@ -57,8 +67,17 @@ public class PricingServiceImpl implements PricingService {
     public String fetchNextMondayFlights() {
         return this.fetchFights(buildCreateSession());
     }
+    public CreateSession buildCreateSession() {
 
-    public static CreateSession buildCreateSession() {
+        String apiKey = env.getProperty(API_KEY_PROPERTY);
+
+        if (apiKey == null) {
+            throw new PropertyNotFoundException(new StringBuilder("Property not found. Please include -Dapi.key={key} ")
+                    .append("in your vm arguments on the application's startup. ")
+                    .append("If running with maven run mvn spring-boot -Dapi.key={key}").toString());
+        }
+        log.debug(String.format("APIKEY %s", apiKey));
+
         LocalDate nextMonday = DateUtil.getNextMonday();
         LocalDate nextDay = nextMonday.plusDays(1);
         return CreateSession.builder()
@@ -72,14 +91,15 @@ public class PricingServiceImpl implements PricingService {
                 .outbounddate(nextMonday.format(DateTimeFormatter.ISO_DATE))
                 .inbounddate(nextDay.format(DateTimeFormatter.ISO_DATE))
                 .adults(1)
-                .apiKey("ss630745725358065467897349852985")
+                .apiKey(apiKey)
                 .build();
     }
 
-    public static HttpEntity<MultiValueMap<String, String>> createSessionForm(CreateSession createSession){
+    public HttpEntity<MultiValueMap<String, String>> createSessionForm(CreateSession createSession) {
+
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type","application/x-www-form-urlencoded");
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("cabinclass", createSession.getCabinclass());
         map.add("country", createSession.getCountry());
         map.add("currency", createSession.getCurrency());
@@ -90,7 +110,7 @@ public class PricingServiceImpl implements PricingService {
         map.add("outboundDate", createSession.getOutbounddate());
         map.add("inboundDate", createSession.getInbounddate());
         map.add("adults", createSession.getAdults().toString());
-        map.add("apiKey","ss630745725358065467897349852985");
+        map.add("apiKey", createSession.getApiKey()) ;
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
         return entity;
     }

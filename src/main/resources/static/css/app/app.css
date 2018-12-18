@@ -175,6 +175,7 @@ div.fight-item div h4 {
           transform: translateX(-50%);
   background: url('/img/bg.jpg') no-repeat;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: cover;
   background-position: center;

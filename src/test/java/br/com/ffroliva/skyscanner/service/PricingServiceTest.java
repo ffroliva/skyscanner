@@ -30,17 +30,16 @@ public class PricingServiceTest {
     @Before
     public void before(){
         pricingService = new PricingServiceImpl();
-        pricingService.createSession(PricingServiceImpl.buildCreateSession());
-
+        pricingService.createSession(new PricingServiceImpl().buildCreateSession());
     }
 
     @Test
     public void fetchFlightPricingTest(){
-        pricingService.fetchFights(PricingServiceImpl.buildCreateSession());
+        pricingService.fetchFights(new PricingServiceImpl().buildCreateSession());
     }
 
     @Test
     public void createSession(){
-        pricingService.createSession(PricingServiceImpl.buildCreateSession());
+        pricingService.createSession(new PricingServiceImpl().buildCreateSession());
     }
 }

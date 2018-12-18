@@ -1,0 +1,30 @@
+.price {
+    font-size: 30px;
+}
+
+.company {
+    color: gray;
+}
+
+.btn-round {
+    border-radius: 17px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #00cb6f;
+    border: 0px;
+  }
+  .btn-round:hover{
+    background-color: #00bd68;
+  }
+  
+  .btn-round:focus,.btn-round:active {
+    outline: none !important;
+    box-shadow: none;
+    background-color: #00cb6f !important;
+  }
+  
+  .fa-pound-sign {
+    -webkit-text-stroke: 1px white;
+  }

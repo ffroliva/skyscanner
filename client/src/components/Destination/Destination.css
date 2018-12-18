@@ -1,0 +1,20 @@
+
+#destination div {
+  background-color: #00b2d6;
+}
+
+#destination h1 {
+  color: white;
+  font-size: 50px;
+  vertical-align: middle;
+}
+
+.icon-arrow-right {
+  font-size: 30px;
+
+}
+
+.travellers {
+  color: #FFF;
+  font-size: 16px;
+}

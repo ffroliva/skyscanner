@@ -1,0 +1,27 @@
+.navbar-margin-bottom-0 {
+  margin-bottom: 0px;
+}
+
+.backgroud-color-white {
+  background-color: white;
+}
+
+.navbar {
+  background-color: #ffffff;
+}
+.navbar .navbar-toggle {
+  border-color: white;
+}
+
+.navbar .navbar-toggle:hover,
+.navbar .navbar-toggle:focus {
+  background-color: white;
+}
+
+.navbar .navbar-toggle .navbar-toggler-icon {
+  color: #4ba1b7;
+}
+
+.logo-image{
+  height:24px;
+}

@@ -1,0 +1,40 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.pull-right {
+  text-align: right !important;
+}
+
+.top5 {
+  margin-top: 5px;
+}
+
+.top10 {
+  margin-top: 10px;
+}
+
+.bottom5 {
+  margin-bottom: 5px;
+}
+
+.bottom10 {
+  margin-bottom: 10px;
+}
+
+.right5 {
+  margin-right: 5px;
+}
+
+.right10 {
+  margin-right: 10px;
+}
+
+.left5 {
+  margin-left: 5px;
+}
+
+.left10 {
+  margin-left: 10px;
+}
